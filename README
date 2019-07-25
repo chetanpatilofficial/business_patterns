@@ -1,14 +1,4 @@
 This update consists of the following items:
-   PLEASE NOTE: 
-   To make the scope of the project 
-   manageable in this early stage, I 
-   have limited my focus to the years 
-   2012-2016 (inclusive) and to the 
-   5 largest metropolitan areas of 
-   New York State. In later 
-   iterations, I will consider a wider
-   range of geographical areas and 
-   years. 
 
 1. some supplementary files: 
     - county_layout_2015.txt, which 
@@ -50,4 +40,19 @@ This update consists of the following items:
 
 PLEASE NOTE: 
 
-I have not attached the tables containing the data that I analyzed, because they are too large. But these tables can be found at https://www.census.gov/programs-surveys/cbp/data/datasets.html.
+   1. I have not attached the tables 
+   containing the data that I analyzed, 
+   because they are too large. But these
+   tables can be found at 
+   https://www.census.gov/programs-
+   surveys/cbp/data/datasets.html.
+   
+   2. To make the scope of the project 
+   manageable in this early stage, I 
+   have limited my focus to the years 
+   2012-2016 (inclusive) and to the 
+   5 largest metropolitan areas of 
+   New York State. In later 
+   iterations, I will consider a wider
+   range of geographical areas and 
+   years. 
