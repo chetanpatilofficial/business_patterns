@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# Obtains data tables on business patterns by county from the census bureau, for years 
+# 1986 - 2016, inclusive.
+
+for ((year=72; year<=99; year++))
+do
+    curl --output "bp_"$year \
+        "https://www2.census.gov/programs-surveys/cbp/datasets/19"$year"/cbp"$year"co.zip"
+
+done
+
+for ((year=0; year<17; year++))
+do
+    curl --output "bp_"`printf %02d $year` \
+        "https://www2.census.gov/programs-surveys/cbp/datasets/20"`printf %02d $year`"/cbp"`printf %02d $year`"co.zip"
+
+done

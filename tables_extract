@@ -1,0 +1,13 @@
+#!/bin/bash
+
+for ((year=86; year<=99; year++))
+do
+    unzip -d ./tables bp_$year
+
+done
+
+for ((year=0; year<17; year++))
+do
+    unzip -d ./tables bp_`printf %02d $year`
+
+done

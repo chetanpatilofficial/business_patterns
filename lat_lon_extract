@@ -1,0 +1,23 @@
+#!/usr/bin/python3
+
+# Extracts county name and latitude/longitude coordinates from a county table 
+# cut and pasted from wikipedia. The table has been modified slightly to make 
+# things go smoothly.  
+# USAGE: ./lat_lon_extract ../old_counties_stuff/counties_ny >> counties_lat_lon
+# Here, counties_lat_lon already has headers written manually into it, and 
+# counties_ny is the old table with unusably formatting and containing much more 
+# information than we need.
+
+import re
+import sys
+import fileinput
+
+f = open(sys.argv[1], "r")
+
+for line in f: 
+
+	row = re.findall(r'.*\d\d(\d\d\d).*\s([a-zA-Z]+)\s\s+[A-Z].*([–+]\d\d\.[0-9]*)°\s*([–+]\d\d\.[0-9]*)°', line)
+	print(row[0][0],',',row[0][1],',',row[0][2],',',row[0][3], sep = '')
+	# print("this line is ok")
+
+f.close()

@@ -1,0 +1,116 @@
+# Imports, cleans, and adds relevant columns to business pattern data from 1986 to 2016 
+# for New York State, by county. 
+# Prefix with "#!/usr/bin/env Rscript" to run as R script from terminal.
+
+library(stringr)
+library(readr)
+library(dplyr)
+
+## Setup: create auxiliary dfs ----
+# Import the data for adding some extra columns we will want
+# County names
+co_names <- read_csv("georef12.txt") %>% filter(fipstate == "36")
+
+# latitude & longitude of county centroid
+co_lat_lon <- read_csv("counties_info/lat_lon/counties_lat_lon")
+# Replace indigestible "–" with normal "-":
+co_lat_lon$longitude <- sub("–", "-", co_lat_lon$longitude)
+co_lat_lon$longitude <- as.double(co_lat_lon$longitude)
+
+# putting those together:
+co_names_lat_lon <- full_join(co_names, co_lat_lon, by = "fipscty") %>% select("fipscty", "county", "latitude", "longitude")
+
+# broad industry categories
+naics_broad <- read_csv("naics_broad")
+naics_broad$industry_code <- as.character(naics_broad$industry_code)
+sic_broad <- read_csv("sic")
+
+# associate each noise flag (emp, ap) with average of its assigned range:
+emp_flags <- read_csv("emp_flags")
+
+# We can't do anything similar with annual payroll flags
+# since we don't have size classes for annual payroll.
+
+## Create an empty master dataframe to load everything into ----
+bp <- data.frame(
+  fipscty = character(),
+  county = character(),
+  latitude = double(),
+  longitude = double(),
+  industry = character(),
+  empflag = character(),
+  emp = double(),
+  ap = double(),
+  est = double(),
+  year = integer(),
+  stringsAsFactors = FALSE
+)
+
+## Import the b.p. data, clean, make desired cols, add to master df ----
+for (file in list.files("bp_tables")) {
+  # Read the file into a table
+  bp_file <- read_csv(paste("bp_tables/", file, sep=""), 
+                      col_types = cols(), col_names = TRUE)
+  
+  # Standardize the col headings to lowercase
+  names(bp_file) <- tolower(names(bp_file)) 
+
+  # Shrink the table so that we're only looking at NY state
+  # and ignoring countywide totals (we can easily recover those)
+  # Note: between 1986 and 1997 inclusive, they used sic, 
+  # not naics.
+  if ("naics" %in% names(bp_file)) {
+    bp_file <- bp_file %>% 
+    filter(fipstate == "36", naics != "------")
+  } else {
+    bp_file <- bp_file %>% 
+    filter(fipstate == "36", sic != "----")
+  }
+  
+  
+  # Create a col for year
+  if (as.integer(substr(file, 4,5)) < 17) {
+    bp_file$year <- as.integer(paste("20", substr(file, 4,5), sep=""))
+  } else {
+    bp_file$year <- as.integer(paste("19", substr(file, 4,5), sep=""))
+  }
+
+  # impute averages for assigned emp ranges, where there are noise flags:
+  # (In the original tables, emp == 0 whenever there's a noise flag)
+  bp_file <- bp_file %>% 
+    # Add col for avg of size class, where flag exists
+    left_join(emp_flags, by = "empflag") 
+  bp_file$emp[bp_file$emp==0] <- bp_file$avg # Replace 0 with average of size class
+    
+  # Create cols for county name & industry (broadly-defined): 
+  if ("naics" %in% names(bp_file)) {
+    bp_file$industry_code <- substr(bp_file$naics, 1,2) # obtains first 2 digits of naics
+  } else {
+    bp_file$industry_code <- substr(bp_file$sic, 1,2) # obtains first 2 digits of sic
+  }
+  
+  
+   bp_file <- bp_file %>% 
+		left_join(co_names_lat_lon, by = "fipscty") # adds county name, lat, & lon
+   
+   if ("naics" %in% names(bp_file)) {
+     bp_file <- bp_file %>%
+      left_join(naics_broad, by = "industry_code") # adds industry name
+   } else {
+     bp_file <- bp_file %>%
+       left_join(sic_broad, by = "industry_code") # adds industry name
+   }
+     # Select out only the columns that we're going to study
+		bp_file <- bp_file %>% 
+		  select("fipscty", "county", "latitude", "longitude", "industry", 
+			         "empflag", "emp", "ap", "est", "year")
+  
+   # Add the table to the master dataframe
+   bp <- rbind(bp, bp_file)
+   
+   # print a message verifying that everything went ok
+   print(paste(paste("Table ", file, sep=""), " processed successfully.", sep=""))
+}
+
+## Write bp to a csv file for easy retrieval (so we only run this script once!): ----
+write.csv(bp, file="bp")

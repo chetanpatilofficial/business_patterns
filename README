@@ -1,0 +1,36 @@
+This update contains the following items: 
+
+
+Scripts: 
+
+1. data_getter - a BASH script that uses curl to obtain datasets from the census bureau website, containing county-wide data on business patterns in the USA for the years 1986 - 2016, storing these as archived files in a new, designated directory. 
+
+2. tables_extract - a BASH script that unzips each of the above tables and writes it to an appropriately named file in the same directory, in csv format. 
+
+3. lat_lon_extract - a Python script that uses a regex to extract the name of each county as well as its latitude and longitude from the flat file counties_ny, and writes these data to stdout in csv format. (Also found in counties_info/lat_lon.)
+
+4. data_cleaner - an R script that imports, uniformizes, and combines these data into a single dataframe, bp. To make the project manageable, this script filters the data to include only data from New York State, and selects out only the variables that we will be investigating (e.g.: county location of the business, latitude & longitude of that county's centroid, annual payroll, number of establishments, number of employees). Where the census bureau has added noise to the business' number of employees (to protect business anonymity), I have imputed the average for that business' size class.
+
+
+Some supplementary tables:
+
+5. emp_flags - a table associating each size class (for number of employees) with the average for that class. 
+
+6. georef12.county_layout_2015.txt - a document describing the variables present in (most of) the original datasets
+
+7. naics_broad - a table associating the first two digits of each NAICS code with its broadly-defined industry category (used to reduce the number and variety of industries we consider to an intelligible size)
+
+8. sic - the same thing but for SIC codes (used prior to 1997)
+
+9. georef12.txt - a table associating each combination of state FIPS code and county FIPS code with its county name, nationwide. 
+
+10. counties_lat_lon - a table associating each county in New York State with the latitude and longitude of its centroid, created by lat_lon_extract. (Also found in counties_info/lat_lon.)
+
+
+Some other supplementary files, found within counties_info/old_counties_stuff: 
+
+11. counties - an html file of county data copied from wikipedia
+
+12. counties_ny - an ugly, space-separated flat file of text cut and pasted from the above
+
+13. counties_headers - the names of the columns in the above
