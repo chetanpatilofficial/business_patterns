@@ -1,4 +1,4 @@
-This update contains the following items: 
+This repository contains the following items: 
 
 
 Scripts: 
@@ -11,26 +11,30 @@ Scripts:
 
 4. data_cleaner - an R script that imports, uniformizes, and combines these data into a single dataframe, bp. To make the project manageable, this script filters the data to include only data from New York State, and selects out only the variables that we will be investigating (e.g.: county location of the business, latitude & longitude of that county's centroid, annual payroll, number of establishments, number of employees). Where the census bureau has added noise to the business' number of employees (to protect business anonymity), I have imputed the average for that business' size class.
 
+5. compare_avgs_by_yr - an R script that generates plots which compare statewide averages over time by industry, for annual payroll, number of establishments, and number of employees.
+
+6. mean_ap.png, mean_emp.png, mean_est.pn - three plots which display statewide averages over time by industry, for annual payroll, number of establishments, and number of employees. BUG: the range of years of each facet (industry) depends on the years for which that name for the industry was in use. (To fix in later version.)
+
 
 Some supplementary tables:
 
-5. emp_flags - a table associating each size class (for number of employees) with the average for that class. 
+7. emp_flags - a table associating each size class (for number of employees) with the average for that class. 
 
-6. georef12.county_layout_2015.txt - a document describing the variables present in (most of) the original datasets
+8. georef12.county_layout_2015.txt - a document describing the variables present in (most of) the original datasets
 
-7. naics_broad - a table associating the first two digits of each NAICS code with its broadly-defined industry category (used to reduce the number and variety of industries we consider to an intelligible size)
+9. naics_broad - a table associating the first two digits of each NAICS code with its broadly-defined industry category (used to reduce the number and variety of industries we consider to an intelligible size)
 
-8. sic - the same thing but for SIC codes (used prior to 1997)
+10. sic - the same thing but for SIC codes (used prior to 1997)
 
-9. georef12.txt - a table associating each combination of state FIPS code and county FIPS code with its county name, nationwide. 
+11. georef12.txt - a table associating each combination of state FIPS code and county FIPS code with its county name, nationwide. 
 
-10. counties_lat_lon - a table associating each county in New York State with the latitude and longitude of its centroid, created by lat_lon_extract. (Also found in counties_info/lat_lon.)
+12. counties_lat_lon - a table associating each county in New York State with the latitude and longitude of its centroid, created by lat_lon_extract. (Also found in counties_info/lat_lon.)
 
 
 Some other supplementary files, found within counties_info/old_counties_stuff: 
 
-11. counties - an html file of county data copied from wikipedia
+13. counties - an html file of county data copied from wikipedia
 
-12. counties_ny - an ugly, space-separated flat file of text cut and pasted from the above
+14. counties_ny - an ugly, space-separated flat file of text cut and pasted from the above
 
-13. counties_headers - the names of the columns in the above
+15. counties_headers - the names of the columns in the above
